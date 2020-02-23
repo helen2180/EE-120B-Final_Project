@@ -40,14 +40,7 @@ void tick() {
 			}
 			break;
 	}
-	switch (state) { //actions
-		case wait:
-			break;
-		case press:
-			break;
-	}
 }
-
 
 int main(void) {
   DDRA = 0x00; PORTA = 0xFF;
@@ -55,28 +48,31 @@ int main(void) {
 	DDRC = 0xFF; PORTC = 0x00;
 	DDRD = 0xFF; PORTD = 0x00;
 
+  srand(time(0));
+
 	unsigned char joy;
 
 	ADC_init();
 	LCD_init();
 
   while (1) {
-	   joy = js();
-    		if (joy == 1) {
-    			LCD_ClearScreen();
-    			LCD_DisplayString(1, "Up");
-    		}
-    		else if (joy == 2) {
-  			LCD_ClearScreen();
-    			LCD_DisplayString(1, "Down");
-    		}
-  		else if (joy == 3) {
-    			LCD_ClearScreen();
-    			LCD_DisplayString(1, "Left");
-    		}
-    		else if (joy == 4) {
-    			LCD_ClearScreen();
-    			LCD_DisplayString(1, "Right");
-    		}
+    tick();
+	  joy = js();
+    if (joy == 1) {
+      LCD_ClearScreen();
+    	LCD_DisplayString(1, "Up");
+    }
+    else if (joy == 2) {
+  		LCD_ClearScreen();
+    	LCD_DisplayString(1, "Down");
+    }
+  	else if (joy == 3) {
+    	LCD_ClearScreen();
+    	LCD_DisplayString(1, "Left");
+    }
+    else if (joy == 4) {
+    	LCD_ClearScreen();
+    	LCD_DisplayString(1, "Right");
+    }
   }
 }
