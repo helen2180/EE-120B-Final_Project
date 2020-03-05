@@ -1,7 +1,6 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include "nokia5110.h"
-#include "io.h"
 #include "joystick.h"
 #include "scheduler.h"
 #include "timer.h"
