@@ -13,6 +13,7 @@ unsigned char notes[8] = {1, 2, 3, 4, 1, 2, 3, 4,};
 unsigned char game_begin;
 unsigned char demo_begin;
 unsigned char player_begin;
+unsigned char game_over;
 unsigned char joy;
 unsigned char i;
 
@@ -24,6 +25,7 @@ void tick_init() {
 	switch (init_state) {
 		case init1:
 			game_begin = 0;
+			game_over = 0;
 			player_begin = 0;
 			demo_begin = 0;
 			title_screen();
@@ -45,6 +47,14 @@ void tick_init() {
 			}
 			break;
 		case start:
+			if (game_over == 1) {
+				error_screen();
+			}
+			/*
+			else {
+				play_again_screen();
+			}
+			*/
 			break;
 	}
 }
@@ -110,6 +120,7 @@ void tick_player() {
 	switch (play_state) {
 		case init2:
 			if (game_begin && player_begin) {
+				i = 0;
 				play_init();
 				play_state = idle;
 			}
@@ -122,7 +133,6 @@ void tick_player() {
 				play_state = up;
 				set_PWM(F4);
 				play_up();
-				PORTC = 0x00;
 			}
 			else if (joy == 2) {
 				play_state = down;
@@ -146,42 +156,69 @@ void tick_player() {
 		case up:
 			if (joy == 1) {
 				play_state = up;
+				if (notes[i] != 1) {
+					game_over = 1;
+					game_begin = 0;
+					set_PWM(0);
+					play_state = init2;
+				}
 			}
 			else {
 				play_state = idle;
 				play_init();
 				set_PWM(0);
-				PORTC = 0xFF;
+				i++;
 			}
 			break;
 		case down:
 			if (joy == 2) {
 				play_state = down;
+				if (notes[i] != 2) {
+					game_over = 1;
+					game_begin = 0;
+					set_PWM(0);
+					play_state = init2;
+				}
 			}
 			else {
 				play_state = idle;
 				play_init();
 				set_PWM(0);
+				i++;
 			}
 			break;
 		case left:
 			if (joy == 3) {
 				play_state = left;
+				if (notes[i] != 3) {
+					game_over = 1;
+					game_begin = 0;
+					set_PWM(0);
+					play_state = init2;
+				}
 			}
 			else {
 				play_state = idle;
 				play_init();
 				set_PWM(0);
+				i++;
 			}
 			break;
 		case right:
 			if (joy == 4) {
 				play_state = right;
+				if (notes[i] != 4) {
+					game_over = 1;
+					game_begin = 0;
+					set_PWM(0);
+					play_state = init2;
+				}
 			}
 			else {
 				play_state = idle;
 				play_init();
 				set_PWM(0);
+				i++;
 			}
 			break;
 	}
