@@ -105,10 +105,29 @@ int main(void) {
 	LCD_init();
 	nokia_lcd_init();
 	nokia_lcd_clear();
-	title_screen();
-	LCD_DisplayString(1, "Click the Button to begin!");
 	
+	static task task1;
+	task *tasks[] = { &task1};
+	const unsigned short numTasks = sizeof(tasks)/sizeof(task*);
+	
+	task1.state = 0;
+	task1.period = 5;
+	task1.elapsedTime = task1.period;
+	task1.TickFct = &tick_js;
+	
+	TimerSet(1);
+	TimerOn();
+	
+	unsigned short i;
 	while (1) {
-		tick_js();
+		for ( i = 0; i < numTasks; i++ ) {
+			if ( tasks[i]->elapsedTime == tasks[i]->period ) {
+				tasks[i]->state = tasks[i]->TickFct(tasks[i]->state);
+				tasks[i]->elapsedTime = 0;
+			}
+			tasks[i]->elapsedTime += 1;
+		}
+		while (!TimerFlag);
+		TimerFlag = 0;
 	}
 }
