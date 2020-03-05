@@ -35,6 +35,8 @@ void tick_init() {
 				init_state = start;
 				game_begin = 1;
 				demo_begin = 1;
+				i = 0;
+				PWM_on();
 				break;
 			}
 			else {
@@ -58,11 +60,47 @@ void tick_demo () {
 			}
 			break;
 		case wait2:
-			demo_init();
+			if (!player_begin) {
+				demo_init();
+			}
+			if (demo_begin) {
+				demo_state = play;
+			}
+			else {
+				demo_state = wait2;
+			}
 			break;
 		case play:
+			if (notes[i] == 1) {
+				demo_up();
+				set_PWM(F4);
+			}
+			else if (notes[i] == 2) {
+				demo_down();
+				set_PWM(C4);
+			}
+			else if (notes[i] == 3) {
+				demo_left();
+				set_PWM(D4);
+			}
+			else if (notes[i] == 4) {
+				demo_right();
+				set_PWM(E4);
+			}
+			demo_state = blank;
 			break;
 		case blank:
+			demo_init();
+			set_PWM(0);
+			if (i < 8) {
+				demo_state = play;
+				i++;
+			}
+			else {
+				demo_state = wait2;
+				demo_begin = 0;
+				player_begin = 1;
+			}
 			break;
 	}
 }
@@ -73,7 +111,6 @@ void tick_player() {
 		case init2:
 			if (game_begin && player_begin) {
 				play_init();
-				PWM_on();
 				play_state = idle;
 			}
 			else {
@@ -170,7 +207,7 @@ int main(void) {
 	task1.TickFct = &tick_init;
 	
 	task2.state = 0;
-	task2.period = 700;
+	task2.period = 200;
 	task2.elapsedTime = task2.period;
 	task2.TickFct = &tick_demo;
 	
