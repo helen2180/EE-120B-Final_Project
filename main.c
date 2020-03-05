@@ -17,6 +17,8 @@ void tick_js() {
 	joy = js();
 	switch (joy_state) {
 		case start:
+			title_screen();
+			PORTC = 0xFF;
 			if (button) {
 				play_init();
 				PWM_on();
@@ -31,6 +33,7 @@ void tick_js() {
 				joy_state = up;
 				set_PWM(F4);
 				play_up();
+				PORTC = 0x00;
 			}
 			else if (joy == 2) {
 				joy_state = down;
@@ -59,6 +62,7 @@ void tick_js() {
 				joy_state = idle;
 				play_init();
 				set_PWM(0);
+				PORTC = 0xFF;
 			}
 			break;
 		case down:
@@ -98,10 +102,8 @@ int main(void) {
 	DDRA = 0x00; PORTA = 0xFF;
 	DDRB = 0xFF; PORTB = 0x00;
 	DDRC = 0xFF; PORTC = 0x00;
-	DDRD = 0xFF; PORTD = 0x00;
 
 	ADC_init();
-	LCD_init();
 	nokia_lcd_init();
 	nokia_lcd_clear();
 	
@@ -110,7 +112,7 @@ int main(void) {
 	const unsigned short numTasks = sizeof(tasks)/sizeof(task*);
 	
 	task1.state = 0;
-	task1.period = 5;
+	task1.period = 50;
 	task1.elapsedTime = task1.period;
 	task1.TickFct = &tick_js;
 	
