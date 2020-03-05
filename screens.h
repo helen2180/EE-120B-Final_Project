@@ -144,4 +144,19 @@ void play_again_screen() {
 	nokia_lcd_render();
 }
 
+void correct_screen() {
+	nokia_lcd_clear();
+	nokia_lcd_set_cursor(5, 15);
+	nokia_lcd_write_string("Correct", 2);
+	nokia_lcd_render();
+}
+
+void error_screen() {
+	nokia_lcd_clear();
+	nokia_lcd_set_cursor(15, 15);
+	nokia_lcd_write_string("Error", 2);
+	nokia_lcd_render();
+}
+
+
 #endif /* SCREENS_H_ */
