@@ -37,7 +37,6 @@ void tick_init() {
 			game_win = 0;
 			player_begin = 0;
 			demo_begin = 0;
-			transmit_data(0x07);
 			curr_round = 0;
 			if (!button) {
 				init_state = wait1;
@@ -285,7 +284,7 @@ void tick_player() {
 void tick_disp() {
 	switch (disp_state) { // transitions
 		case init4:
-			disp_state = disp_state;
+			disp_state = display;
 			break;
 		case display:
 			disp_state = display;
@@ -298,28 +297,28 @@ void tick_disp() {
 			if (curr_round == 1) {
 				transmit_data(0x01);
 			}
-			if (curr_round == 2) {
+			else if (curr_round == 2) {
 				transmit_data(0x03);
 			}
-			if (curr_round == 3) {
+			else if (curr_round == 3) {
 				transmit_data(0x07);
 			}
-			if (curr_round == 4) {
+			else if (curr_round == 4) {
 				transmit_data(0x0F);
 			}
-			if (curr_round == 5) {
+			else if (curr_round == 5) {
 				transmit_data(0x1F);
 			}
-			if (curr_round == 6) {
+			else if (curr_round == 6) {
 				transmit_data(0x3F);
 			}
-			if (curr_round == 7) {
+			else if (curr_round == 7) {
 				transmit_data(0x7F);
 			}
-			if (curr_round == 8) {
+			else if (curr_round == 8) {
 				transmit_data(0xFF);
 			}
-			if (curr_round == 0) {
+			else {
 				transmit_data(0x00);
 			}
 			break;
@@ -334,7 +333,6 @@ int main(void) {
 	
 	ADC_init();
 	nokia_lcd_init();
-	nokia_lcd_clear();
 	title_screen();
 	game_begin = 0;
 	PORTD = 0xFF;
@@ -354,7 +352,7 @@ int main(void) {
 	task2.TickFct = &tick_demo;
 	
 	task3.state = 0;
-	task3.period = 80;
+	task3.period = 50;
 	task3.elapsedTime = task3.period;
 	task3.TickFct = &tick_player;
 	
