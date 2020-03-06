@@ -3,7 +3,6 @@
 
 // Nokia 5110 screen functions
 void title_screen();
-void game_over_screen();
 void win_screen();
 void lose_screen();
 void play_again_screen();
@@ -118,15 +117,6 @@ void play_right() {
 	nokia_lcd_render();
 }
 
-void game_over_screen () {
-	nokia_lcd_clear();
-	nokia_lcd_set_cursor(20, 5);
-	nokia_lcd_write_string("Game", 2);
-	nokia_lcd_set_cursor(20, 25);
-	nokia_lcd_write_string("Over", 2);
-	nokia_lcd_render();
-}
-
 void win_screen () {
 	nokia_lcd_clear();
 	nokia_lcd_set_cursor(27, 5);
@@ -151,20 +141,6 @@ void play_again_screen() {
 	nokia_lcd_write_string("Play", 2);
 	nokia_lcd_set_cursor(10, 25);
 	nokia_lcd_write_string("Again?", 2);
-	nokia_lcd_render();
-}
-
-void correct_screen() {
-	nokia_lcd_clear();
-	nokia_lcd_set_cursor(5, 15);
-	nokia_lcd_write_string("Correct", 2);
-	nokia_lcd_render();
-}
-
-void error_screen() {
-	nokia_lcd_clear();
-	nokia_lcd_set_cursor(15, 15);                                                                                                                                                                                                                          
-	nokia_lcd_write_string("Error", 2);
 	nokia_lcd_render();
 }
 #endif /* SCREENS_H_ */
