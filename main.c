@@ -342,26 +342,26 @@ int main(void) {
 	const unsigned short numTasks = sizeof(tasks)/sizeof(task*);
 	
 	task1.state = 0;
-	task1.period = 50;
+	task1.period = 5;
 	task1.elapsedTime = task1.period;
 	task1.TickFct = &tick_init;
 	
 	task2.state = 0;
-	task2.period = 200;
+	task2.period = 20;
 	task2.elapsedTime = task2.period;
 	task2.TickFct = &tick_demo;
 	
 	task3.state = 0;
-	task3.period = 50;
+	task3.period = 5;
 	task3.elapsedTime = task3.period;
 	task3.TickFct = &tick_player;
 	
 	task4.state = 0;
-	task4.period = 50;
+	task4.period = 5;
 	task4.elapsedTime = task4.period;
 	task4.TickFct = &tick_disp;
 	
-	TimerSet(1);
+	TimerSet(10);
 	TimerOn();
 	
 	unsigned short i;
