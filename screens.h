@@ -3,8 +3,9 @@
 
 // Nokia 5110 screen functions
 void title_screen();
-void game_over_screen ();
-void win_screen ();
+void game_over_screen();
+void win_screen();
+void lose_screen();
 void play_again_screen();
 
 void demo_init();
@@ -22,12 +23,12 @@ void play_right();
 
 void title_screen() {
 	nokia_lcd_clear();
-	nokia_lcd_set_cursor(20, 0);
-	nokia_lcd_write_string("Just", 2);
-	nokia_lcd_set_cursor(15, 15);
-	nokia_lcd_write_string("Dance", 2);
-	nokia_lcd_set_cursor(12, 35);
-	nokia_lcd_write_string("Revolution", 1);
+	nokia_lcd_set_cursor(15, 0);
+	nokia_lcd_write_string("Simon", 2);
+	nokia_lcd_set_cursor(20, 18);
+	nokia_lcd_write_string("Says", 2);
+	nokia_lcd_set_cursor(3, 38);
+	nokia_lcd_write_string("Dance Edition", 1);
 	nokia_lcd_render();
 }
 
@@ -135,6 +136,15 @@ void win_screen () {
 	nokia_lcd_render();
 }
 
+void lose_screen () {
+	nokia_lcd_clear();
+	nokia_lcd_set_cursor(27, 5);
+	nokia_lcd_write_string("You", 2);
+	nokia_lcd_set_cursor(22, 25);
+	nokia_lcd_write_string("Lose", 2);
+	nokia_lcd_render();
+}
+
 void play_again_screen() {
 	nokia_lcd_clear();
 	nokia_lcd_set_cursor(20, 5);
@@ -153,10 +163,8 @@ void correct_screen() {
 
 void error_screen() {
 	nokia_lcd_clear();
-	nokia_lcd_set_cursor(15, 15);
+	nokia_lcd_set_cursor(15, 15);                                                                                                                                                                                                                          
 	nokia_lcd_write_string("Error", 2);
 	nokia_lcd_render();
 }
-
-
 #endif /* SCREENS_H_ */
