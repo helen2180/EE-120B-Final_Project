@@ -9,11 +9,15 @@
 #include "PWM.h"
 
 #define button (~PINA & 0x04)
+unsigned char max_notes = 7; // actually max_notes minus one
 unsigned char notes[8] = {1, 2, 3, 4, 1, 2, 3, 4,};
 unsigned char game_begin;
 unsigned char demo_begin;
 unsigned char player_begin;
-unsigned char game_over;
+
+unsigned char game_lose;
+unsigned char game_win;
+
 unsigned char joy;
 unsigned char i;
 
@@ -22,15 +26,20 @@ enum demo_state {init2, wait2, play, blank}; demo_state;
 enum play_state {init3, idle, up, down, left, right} play_state;
 
 void tick_init() {
-	switch (init_state) {
+	switch (init_state) { // transitions
 		case init1:
 			game_begin = 0;
-			game_over = 0;
+			game_lose = 0;
+			game_win = 0;
 			player_begin = 0;
 			demo_begin = 0;
-			title_screen();
 			PORTC = 0xFF;
-			init_state = wait1;
+			if (!button) {
+				init_state = wait1;
+			}
+			else {
+				init_state = init1;
+			}
 			break;
 		case wait1: // add function that creates a random array of 8 numbers between 1-4
 			if (button) {
@@ -47,14 +56,22 @@ void tick_init() {
 			}
 			break;
 		case start:
-			if (game_over == 1) {
-				error_screen();
+			break;
+	}
+	switch (init_state) { // actions
+		case init1:
+			break;
+		case wait1:
+			break;
+		case start:
+			if (game_lose == 1) {
+				set_PWM(0);
+				lose_screen();
 			}
-			/*
-			else {
-				play_again_screen();
+			else if (game_win == 1) {
+				set_PWM(0);
+				win_screen();
 			}
-			*/
 			break;
 	}
 }
@@ -102,7 +119,7 @@ void tick_demo () {
 		case blank:
 			demo_init();
 			set_PWM(0);
-			if (i < 8) {
+			if (i < max_notes) { // change max_notes to 1 to max_notes to iterate every time
 				demo_state = play;
 				i++;
 			}
@@ -157,9 +174,13 @@ void tick_player() {
 			if (joy == 1) {
 				play_state = up;
 				if (notes[i] != 1) {
-					game_over = 1;
+					game_lose = 1;
 					game_begin = 0;
-					set_PWM(0);
+					play_state = init2;
+				}
+				else if (i == max_notes) {
+					game_win = 1;
+					game_begin = 0;
 					play_state = init2;
 				}
 			}
@@ -174,9 +195,13 @@ void tick_player() {
 			if (joy == 2) {
 				play_state = down;
 				if (notes[i] != 2) {
-					game_over = 1;
+					game_lose = 1;
 					game_begin = 0;
-					set_PWM(0);
+					play_state = init2;
+				}
+				else if (i == max_notes) {
+					game_win = 1;
+					game_begin = 0;
 					play_state = init2;
 				}
 			}
@@ -191,9 +216,13 @@ void tick_player() {
 			if (joy == 3) {
 				play_state = left;
 				if (notes[i] != 3) {
-					game_over = 1;
+					game_lose = 1;
 					game_begin = 0;
-					set_PWM(0);
+					play_state = init2;
+				}
+				else if (i == max_notes) {
+					game_win = 1;
+					game_begin = 0;
 					play_state = init2;
 				}
 			}
@@ -208,9 +237,13 @@ void tick_player() {
 			if (joy == 4) {
 				play_state = right;
 				if (notes[i] != 4) {
-					game_over = 1;
+					game_lose = 1;
 					game_begin = 0;
-					set_PWM(0);
+					play_state = init2;
+				}
+				else if (i == max_notes) {
+					game_win = 1;
+					game_begin = 0;
 					play_state = init2;
 				}
 			}
@@ -232,6 +265,7 @@ int main(void) {
 	ADC_init();
 	nokia_lcd_init();
 	nokia_lcd_clear();
+	title_screen();
 	game_begin = 0;
 	
 	static task task1, task2, task3;
