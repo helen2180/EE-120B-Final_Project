@@ -9,11 +9,12 @@
 #include "PWM.h"
 
 #define button (~PINA & 0x04)
-unsigned char max_notes = 7; // actually max_notes minus one
+unsigned char max_notes = 8; 
 unsigned char notes[8] = {1, 2, 3, 4, 1, 2, 3, 4,};
 unsigned char game_begin;
 unsigned char demo_begin;
 unsigned char player_begin;
+unsigned char curr_round;
 
 unsigned char game_lose;
 unsigned char game_win;
@@ -33,7 +34,6 @@ void tick_init() {
 			game_win = 0;
 			player_begin = 0;
 			demo_begin = 0;
-			PORTC = 0xFF;
 			if (!button) {
 				init_state = wait1;
 			}
@@ -46,6 +46,7 @@ void tick_init() {
 				init_state = start;
 				game_begin = 1;
 				demo_begin = 1;
+				curr_round = 1;
 				i = 0;
 				PWM_on();
 				break;
@@ -80,6 +81,8 @@ void tick_demo () {
 	switch(demo_state) {
 		case init2:
 			if (game_begin && demo_begin) {
+				set_PWM(0);
+				i = 0;
 				demo_state = wait2;
 			}
 			else {
@@ -115,15 +118,16 @@ void tick_demo () {
 				set_PWM(E4);
 			}
 			demo_state = blank;
+			i++;
 			break;
 		case blank:
 			demo_init();
 			set_PWM(0);
-			if (i < max_notes) { // change max_notes to 1 to max_notes to iterate every time
+			if (i < curr_round) { 
 				demo_state = play;
-				i++;
 			}
 			else {
+				i = 0;
 				demo_state = wait2;
 				demo_begin = 0;
 				player_begin = 1;
@@ -137,7 +141,6 @@ void tick_player() {
 	switch (play_state) {
 		case init2:
 			if (game_begin && player_begin) {
-				i = 0;
 				play_init();
 				play_state = idle;
 			}
@@ -166,6 +169,18 @@ void tick_player() {
 				set_PWM(E4);
 				play_right();
 			}
+			else if (i == max_notes) {
+				game_win = 1;
+				game_begin = 0;
+				play_state = init2;
+			}
+			else if (i == curr_round) {
+				player_begin = 0;
+				demo_begin = 1;
+				curr_round++;
+				i = 0;
+				play_state = init2;
+			}
 			else {
 				play_state = idle;
 			}
@@ -175,11 +190,6 @@ void tick_player() {
 				play_state = up;
 				if (notes[i] != 1) {
 					game_lose = 1;
-					game_begin = 0;
-					play_state = init2;
-				}
-				else if (i == max_notes) {
-					game_win = 1;
 					game_begin = 0;
 					play_state = init2;
 				}
@@ -199,11 +209,6 @@ void tick_player() {
 					game_begin = 0;
 					play_state = init2;
 				}
-				else if (i == max_notes) {
-					game_win = 1;
-					game_begin = 0;
-					play_state = init2;
-				}
 			}
 			else {
 				play_state = idle;
@@ -220,11 +225,6 @@ void tick_player() {
 					game_begin = 0;
 					play_state = init2;
 				}
-				else if (i == max_notes) {
-					game_win = 1;
-					game_begin = 0;
-					play_state = init2;
-				}
 			}
 			else {
 				play_state = idle;
@@ -238,11 +238,6 @@ void tick_player() {
 				play_state = right;
 				if (notes[i] != 4) {
 					game_lose = 1;
-					game_begin = 0;
-					play_state = init2;
-				}
-				else if (i == max_notes) {
-					game_win = 1;
 					game_begin = 0;
 					play_state = init2;
 				}
