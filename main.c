@@ -10,17 +10,17 @@
 #include "shift.h"
 
 #define button (~PINA & 0x04)
+
 unsigned char max_notes = 8; 
 unsigned char notes[8] = {};
 unsigned char game_begin;
 unsigned char demo_begin;
 unsigned char player_begin;
-unsigned char curr_round;
 
 unsigned char game_lose;
 unsigned char game_win;
 
-unsigned char joy;
+unsigned char curr_round;
 unsigned char i;
 
 enum init_state {init1, wait1, start}; init_state;
@@ -158,6 +158,7 @@ void tick_demo () {
 }
 
 void tick_player() {
+	unsigned char joy;
 	joy = js();
 	switch (play_state) {
 		case init2:
