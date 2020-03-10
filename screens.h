@@ -119,19 +119,19 @@ void play_right() {
 
 void win_screen () {
 	nokia_lcd_clear();
-	nokia_lcd_set_cursor(27, 5);
-	nokia_lcd_write_string("You", 2);
-	nokia_lcd_set_cursor(24, 25);
-	nokia_lcd_write_string("Win!", 2);
+	nokia_lcd_set_cursor(18, 5);
+	nokia_lcd_write_string("uwu", 3);
+	nokia_lcd_set_cursor(20, 35);
+	nokia_lcd_write_string("You Win!", 1);
 	nokia_lcd_render();
 }
 
 void lose_screen () {
 	nokia_lcd_clear();
-	nokia_lcd_set_cursor(27, 5);
-	nokia_lcd_write_string("You", 2);
-	nokia_lcd_set_cursor(22, 25);
-	nokia_lcd_write_string("Lose", 2);
+	nokia_lcd_set_cursor(18, 5);
+	nokia_lcd_write_string("owo", 3);
+	nokia_lcd_set_cursor(18, 35);
+	nokia_lcd_write_string("You Lose", 1);
 	nokia_lcd_render();
 }
 
