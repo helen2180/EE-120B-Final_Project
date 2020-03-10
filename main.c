@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <util/delay.h>
+#include <stdlib.h>
 #include "nokia5110.h"
 #include "joystick.h"
 #include "scheduler.h"
@@ -10,17 +11,17 @@
 #include "shift.h"
 
 #define button (~PINA & 0x04)
-
 unsigned char max_notes = 8; 
 unsigned char notes[8] = {};
 unsigned char game_begin;
 unsigned char demo_begin;
 unsigned char player_begin;
+unsigned char curr_round;
+unsigned char timer;
 
 unsigned char game_lose;
 unsigned char game_win;
 
-unsigned char curr_round;
 unsigned char i;
 
 enum init_state {init1, wait1, start}; init_state;
@@ -38,6 +39,7 @@ void tick_init() {
 			player_begin = 0;
 			demo_begin = 0;
 			curr_round = 0;
+			timer = 0;
 			if (!button) {
 				init_state = wait1;
 			}
@@ -47,6 +49,7 @@ void tick_init() {
 			break;
 		case wait1: // add function that creates a random array of 8 numbers between 1-4
 			if (button) {
+				srand(timer);
 				for (temp = 0; temp < 8; temp++) {
 					notes[temp] = (rand() % 4) + 1;
 				}
@@ -60,7 +63,7 @@ void tick_init() {
 			}
 			else {
 				init_state = wait1;
-				game_begin = 0;
+				timer++;
 			}
 			break;
 		case start:
